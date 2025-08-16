@@ -35,9 +35,9 @@ class GamepadNode(Node):
         
         self.pubs = defaultdict(dict)
         for i in range(self.blue_robot_count):
-            self.pubs['blue'][i] = self.create_publisher(Twist, f'/simulator/cmd/blue/robot{i}', 10)
+            self.pubs['blue'][i] = self.create_publisher(Twist, f'/pid/cmd/velocity/blue/robot{i}', 10)
         for i in range(self.yellow_robot_count):
-            self.pubs['yellow'][i] = self.create_publisher(Twist, f'/simulator/cmd/yellow/robot{i}', 10)
+            self.pubs['yellow'][i] = self.create_publisher(Twist, f'/pid/cmd/velocity/yellow/robot{i}', 10)
         self.team = 'blue'
         self.robot = 0
         self.prev_b4 = 0
