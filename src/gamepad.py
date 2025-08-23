@@ -35,8 +35,10 @@ class GamepadNode(Node):
         
         self.pubs = defaultdict(dict)
         for i in range(self.blue_robot_count):
+            # self.pubs['blue'][i] = self.create_publisher(Twist, f'/simulator/cmd/blue/robot{i}', 10)
             self.pubs['blue'][i] = self.create_publisher(Twist, f'/pid/cmd/velocity/blue/robot{i}', 10)
         for i in range(self.yellow_robot_count):
+            # self.pubs['yellow'][i] = self.create_publisher(Twist, f'/simulator/cmd/yellow/robot{i}', 10)
             self.pubs['yellow'][i] = self.create_publisher(Twist, f'/pid/cmd/velocity/yellow/robot{i}', 10)
         self.team = 'blue'
         self.robot = 0
@@ -64,13 +66,13 @@ class GamepadNode(Node):
                 joystick = pygame.joystick.Joystick(id)
                 joystick.init()
 
-                w = joystick.get_axis(0)
+                w = joystick.get_axis(3)
                 if abs(w) < self.deadzone:
                     w = 0.0
-                right = joystick.get_axis(3)
+                right = joystick.get_axis(0)
                 if abs(right) < self.deadzone:
                     right = 0.0
-                forward = -joystick.get_axis(4)
+                forward = joystick.get_axis(1)
                 if abs(forward) < self.deadzone:
                     forward = 0.0
                 
