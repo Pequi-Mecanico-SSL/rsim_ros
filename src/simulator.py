@@ -51,6 +51,7 @@ class SimulatorNode(Node):
         # /simulator/robots_poses/blue/0, /simulator/robots_poses/blue/1, ...
         self.pose_publishers = []
         self.velocity_publishers = []
+        self.wheel_velocity_publishers = []
         for i in range(self.blue_robot_count):
             self.pose_publishers.append(
                 self.create_publisher(Pose2D, f'/simulator/poses/blue/robot{i}', 10)
@@ -58,12 +59,18 @@ class SimulatorNode(Node):
             self.velocity_publishers.append(
                 self.create_publisher(Twist, f'/simulator/velocity/blue/robot{i}', 10)
             )
+            self.wheel_velocity_publishers.append(
+                self.create_publisher(Float32MultiArray, f'/simulator/wheel_velocity/blue/robot{i}', 10)
+            )
         for i in range(self.yellow_robot_count):
             self.pose_publishers.append(
                 self.create_publisher(Pose2D, f'/simulator/poses/yellow/robot{i}', 10)
             )
             self.velocity_publishers.append(
                 self.create_publisher(Twist, f'/simulator/velocity/yellow/robot{i}', 10)
+            )
+            self.wheel_velocity_publishers.append(
+                self.create_publisher(Float32MultiArray, f'/simulator/wheel_velocity/yellow/robot{i}', 10)
             )
 
         self.latest_robot_actions = [[0.0 for _ in range(6)] for _ in range(self.blue_robot_count + self.yellow_robot_count)]
@@ -98,6 +105,7 @@ class SimulatorNode(Node):
         ]
 
     def robot_cmd_callback(self, i, msg):
+        # self.get_logger().info(f'Robot {i} velocity command received: [{msg.linear.x}, {msg.linear.y}, {msg.angular.z}]')
         self.latest_robot_actions[i] = [
             0, # has_v_wheel
             msg.linear.x, # wheel_0_speed or v_x
@@ -146,8 +154,12 @@ class SimulatorNode(Node):
             twist_msg = Twist()
             twist_msg.linear.x = state[8 + i * 11]
             twist_msg.linear.y = state[9 + i * 11]
-            twist_msg.angular.z = state[10 + i * 11]
+            twist_msg.angular.z = state[10 + i * 11] * (np.pi / 180.0)  # convert to rad/s
             self.velocity_publishers[i].publish(twist_msg)
+
+            wheel_msg = Float32MultiArray()
+            wheel_msg.data = state[(12 + i * 11):(16 + i * 11)]
+            self.wheel_velocity_publishers[i].publish(wheel_msg)
 
         for i in range(self.yellow_robot_count):
             msg = Pose2D()
@@ -161,8 +173,12 @@ class SimulatorNode(Node):
             twist_msg = Twist()
             twist_msg.linear.x = state[8 + self.blue_robot_count * 11 + i * 11]
             twist_msg.linear.y = state[9 + self.blue_robot_count * 11 + i * 11]
-            twist_msg.angular.z = state[10 + self.blue_robot_count * 11 + i * 11]
+            twist_msg.angular.z = state[10 + self.blue_robot_count * 11 + i * 11] * (np.pi / 180.0)  # convert to rad/s
             self.velocity_publishers[self.blue_robot_count + i].publish(twist_msg)
+
+            wheel_msg = Float32MultiArray()
+            wheel_msg.data = state[(12 + self.blue_robot_count * 11 + i * 11):(16 + self.blue_robot_count * 11 + i * 11)]
+            self.wheel_velocity_publishers[self.blue_robot_count + i].publish(wheel_msg)
 
 def main(args=None):
     rclpy.init(args=args)
