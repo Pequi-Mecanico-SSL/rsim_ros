@@ -11,9 +11,9 @@ launch:
     default: "60"
 
 - node:
-    pkg: "rsim_ros"
-    exec: "simulator"
-    name: "simulator"
+    pkg: "ssl_vision_connector"
+    exec: "protobuf_to_ros"
+    name: "protobuf_to_ros"
     param:
     -
         name: blue_robot_count
@@ -24,6 +24,21 @@ launch:
     -
         name: frequency
         value: $(var frequency)
+
+#- node:
+#    pkg: "rsim_ros"
+#    exec: "simulator"
+#    name: "simulator"
+#    param:
+#    -
+#        name: blue_robot_count
+#        value: $(var blue_robot_count)
+#    -
+#        name: yellow_robot_count
+#        value: $(var yellow_robot_count)
+#    -
+#        name: frequency
+#        value: $(var frequency)
 
 - node:
     pkg: "rsim_ros"

@@ -250,8 +250,8 @@ class VSSRenderField(RenderField):
 
 
 class SSLRenderField(VSSRenderField):
-    length = 9
-    width = 6
+    length = 1.04
+    width = 0.8
     margin = 0.35
     center_circle_r = 1
     penalty_length = 1
