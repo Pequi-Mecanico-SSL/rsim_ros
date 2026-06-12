@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 import os
 from glob import glob
 
-package_name = 'rsim_ros'
+package_name = 'protobuf_to_ros'
 
 setup(
     name=package_name,
@@ -16,16 +16,15 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='thiago',
-    maintainer_email='thiago.017henrique@gmail.com',
+    maintainer='gustavo',
+    maintainer_email='gustavormoura2@gmail.com',
     description='TODO: Package description',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
             'simulator = src.simulator:main',
-            'render = src.render:main',
-            'gamepad = src.gamepad:main',
+            'protobuf_to_ros = src.protobuf_to_ros:main',
         ],
     },
 )
